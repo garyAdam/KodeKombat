@@ -1,16 +1,22 @@
 #game-field {
     position: fixed;
     width: 100%;
-    height: 80%;
+    height: 95%;
     background-color: #03A9F4;
+    background-image: url("/static/background-upper-part.jpg");
+    background-repeat: no-repeat;
+    background-position: bottom;
 }
 
 #ground {
     width: 100%;
     height: 20%;
     background-color: #607D8B;
-    top: 80%;
+    top: 95%;
     position: fixed;
+    background-image: url("/static/background-down-part.jpg");
+    background-repeat: no-repeat;
+    background-position: top;
 }
 
 body {
