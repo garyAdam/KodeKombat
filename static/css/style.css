@@ -2,21 +2,26 @@
     position: fixed;
     width: 100%;
     height: 95%;
-    background-color: #03A9F4;
-    background-image: url("/static/background-upper-part.jpg");
-    background-repeat: no-repeat;
-    background-position: bottom;
+    background-color: black;
+}
+
+#game-field img {
+    height: 95vh;
+    transform: translate(-25%,0);
 }
 
 #ground {
     width: 100%;
     height: 20%;
-    background-color: #607D8B;
+    background-color: black;
     top: 95%;
     position: fixed;
-    background-image: url("/static/background-down-part.jpg");
-    background-repeat: no-repeat;
-    background-position: top;
+}
+
+#ground img {
+    height: 5vh;
+    left: 50vw;
+    transform: translate(-25%,0);
 }
 
 body {
