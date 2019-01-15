@@ -15,7 +15,7 @@ body {
 
 
 #player-two {
-    left: 80%;
+    left: 82%;
     bottom: 1%;
     position: absolute;
     transition-duration: 0.1s;
@@ -23,7 +23,7 @@ body {
 }
 
 #player-one {
-    /*left: 1%;*/
+    left: 3%;
     bottom: 1%;
     position: absolute;
     transition-duration: 0.1s;
