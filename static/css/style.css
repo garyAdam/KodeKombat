@@ -1,26 +1,14 @@
 #game-field {
-    position: fixed;
-    width: 100%;
-    height: 80%;
-    background-color: #03A9F4;
+
 }
 
-#ground {
-    width: 100%;
-    height: 20%;
-    background-color: #607D8B;
-    top: 80%;
+#game-field img{
     position: fixed;
+    width: 100vw;
+    height: 100vh;
 }
 
 body {
     margin: 0;
+    color: black;
 }
-
-
-
-
-/*TODO
-- use bg image and split it 2 halves, align them to the ground
-
-*/
