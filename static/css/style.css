@@ -12,3 +12,26 @@ body {
     margin: 0;
     color: black;
 }
+
+
+#player-two {
+    left: 82%;
+    bottom: 1%;
+    position: absolute;
+    transition-duration: 0.1s;
+    height: 40vh;
+}
+
+#player-one {
+    left: 3%;
+    bottom: 1%;
+    position: absolute;
+    transition-duration: 0.1s;
+    height: 40vh;
+}
+
+
+/*TODO
+- use bg image and split it 2 halves, align them to the ground
+
+*/
