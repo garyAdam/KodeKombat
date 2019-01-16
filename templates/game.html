@@ -9,12 +9,19 @@
 
     <img src="/static/images/jin_stance.gif" id="player-one"
          data-player-position="{{ p1_position}}"
-         data-start-hp="{{ p1_start_hp }}"
+         data-HP="{{ p1_start_hp }}"
          data-can-move-or-attack="{{ p1_can_move }}">
 
     <img src="/static/images/asuka_stance.gif" id="player-two"
          data-player-position="{{ p2_position}}"
-         data-start-hp="{{ p2_start_hp }}"
+         data-HP="{{ p2_start_hp }}"
          data-can-move-or-attack="{{ p2_can_move }}">
+
+    <div id="player-one-HP">
+        <div class="HP-bar"></div>
+    </div>
+    <div id="player-two-HP">
+        <div class="HP-bar"></div>
+    </div>
 
 {% endblock %}

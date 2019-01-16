@@ -22,6 +22,7 @@ body {
     height: 35vh;
 }
 
+
 #player-one {
     left: 3%;
     bottom: 1%;
@@ -30,8 +31,26 @@ body {
     height: 40vh;
 }
 
+#player-one-HP, #player-two-HP {
+    width: 30vw;
+    height: 6vh;
+    position: fixed;
+    top: 2vh;
+}
 
-/*TODO
-- use bg image and split it 2 halves, align them to the ground
+#player-one-HP {
+    left: 2vw;
+}
 
-*/
+#player-two-HP {
+    left: 68vw;
+}
+
+.HP-bar {
+    width: 30vw;
+    height: 6vh;
+    position: absolute;
+    background-color: greenyellow;
+    border-radius: 3vh;
+    box-shadow: inset 0 0 16px 1px black;
+}
