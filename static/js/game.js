@@ -1,34 +1,123 @@
-let playerOne = document.getElementById('player-one');
-let playerOnePos = 3;
-playerOne.style.left = playerOnePos + "%";
-let moving;
+let playerMovement = function (event) {
+    let movementDistance = 0.7;
 
+    let playerOne = document.getElementById('player-one');
+    let playerOnePosition = parseFloat(playerOne.dataset.playerPosition);
+    let playerOneCanMoveOrAttack = playerOne.dataset.canMoveOrAttack;
 
-let movement = function (event) {
-    if (event.key === "d") {
-        playerOnePos += 1;
-        playerOne.style.left = playerOnePos + "%";
-        if (moving ===false) {
-            playerOne.src = "/static/images/jin_walk.gif";
-            moving = true;
-        }
-    } else if (event.key === "a") {
-        playerOnePos -= 1;
-        playerOne.style.left = playerOnePos + "%";
+    let playerTwo = document.getElementById('player-two');
+    let playerTwoPosition = parseFloat(playerTwo.dataset.playerPosition);
+    let playerTwoCanMoveOrAttack = playerTwo.dataset.canMoveOrAttack;
 
+    /*
+    KEY CODES:
+
+    65 - a
+    68 - d
+    69 - e
+    74 - j
+    76 - l
+    85 - u
+
+     */
+
+    if (event.keyCode === 68) {
+        movePlayerOne(playerOne, playerOnePosition, playerOneCanMoveOrAttack, 'onwards', movementDistance);
+    }
+    if (event.keyCode === 65) {
+        movePlayerOne(playerOne, playerOnePosition, playerOneCanMoveOrAttack, 'backwards', movementDistance);
     }
 
+    if (event.keyCode === 69) {
+        if (playerOneCanMoveOrAttack === 'false') {
+            playerOne.src = "/static/images/jin_punch.gif";
+            playerOne.dataset.canMoveOrAttack = 'true';
+        }
+    }
+
+    if (event.keyCode === 74) {
+        movePlayerTwo(playerTwo, playerTwoPosition, playerTwoCanMoveOrAttack, 'onwards', movementDistance);
+    }
+
+    if (event.keyCode === 76) {
+        movePlayerTwo(playerTwo, playerTwoPosition, playerTwoCanMoveOrAttack, 'backwards', movementDistance);
+    }
+
+    if (event.keyCode === 85) {
+        if (playerTwoCanMoveOrAttack === 'false') {
+            playerTwo.src = "/static/images/asuka_punch_new.gif";
+            playerTwo.dataset.canMoveOrAttack = 'true';
+        }
+    }
 };
 
 
-let changeBackStanceToStanding = function () {
+
+function movePlayerOne(player, playerPosition, playerCanMoveOrAttack, direction, movementDistance) {
+    if (direction === 'onwards') {
+        playerPosition += movementDistance;
+    } else if (direction === 'backwards') {
+        playerPosition -= movementDistance;
+    }
+
+    player.style.left = playerPosition + "%";
+    player.dataset.playerPosition = playerPosition;
+
+    if (playerCanMoveOrAttack === 'false') {
+        if (direction === 'onwards') {
+            player.src = "/static/images/jin_walk.gif";
+            player.dataset.canMoveOrAttack = 'true';
+        } else if (direction === 'backwards') {
+            player.src = "/static/images/jin_backwalk.gif";
+            player.dataset.canMoveOrAttack = 'true';
+        }
+    }
+}
+
+
+function movePlayerTwo(player, playerPosition, playerCanMoveOrAttack, direction, movementDistance) {
+    if (direction === 'onwards') {
+        playerPosition -= movementDistance;
+    } else if (direction === 'backwards') {
+        playerPosition += movementDistance;
+    }
+
+    player.style.left = playerPosition + "%";
+    player.dataset.playerPosition = playerPosition;
+
+    if (playerCanMoveOrAttack === 'false') {
+        if (direction === 'onwards') {
+            player.src = "/static/images/asuka_walk.gif";
+            player.dataset.canMoveOrAttack = 'true';
+        } else if (direction === 'backwards') {
+            player.src = "/static/images/asuka_backwalk.gif";
+            player.dataset.canMoveOrAttack = 'true';
+        }
+    }
+}
+
+
+let playerOneBackToStance = function () {
+    let playerOne = document.getElementById('player-one');
     playerOne.src = "/static/images/jin_stance.gif";
-    moving = false;
+    playerOne.dataset.canMoveOrAttack = 'false';
 
 };
 
 
+let playerTwoBackToStance = function () {
+    let playerTwo = document.getElementById('player-two');
+    playerTwo.src = "/static/images/asuka_stance.gif";
+    playerTwo.dataset.canMoveOrAttack = 'false';
 
-window.addEventListener('keypress', movement);
-window.addEventListener('keyup', changeBackStanceToStanding);
+};
 
+
+let init = function () {
+    addEventListener('keydown', playerMovement, false);
+    addEventListener('keyup', playerOneBackToStance, false);
+    addEventListener('keyup', playerTwoBackToStance, false);
+};
+
+
+init();
