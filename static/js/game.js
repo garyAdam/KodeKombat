@@ -32,6 +32,7 @@ let playerMovement = function (event) {
         if (playerOneCanMoveOrAttack === 'false') {
             playerOne.src = "/static/images/jin_punch.gif";
             playerOne.dataset.canMoveOrAttack = 'true';
+            if (playerTwoPosition-playerOnePosition<5) playerTwo.dataset.hp -= 10;
         }
     }
 
