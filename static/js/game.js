@@ -92,10 +92,10 @@ let playerMovement = function (event) {
 
             }
         }
-        ;
+
     }
 
-}
+};
 
 
 
