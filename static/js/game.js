@@ -22,10 +22,10 @@ let playerMovement = function (event) {
      */
 
     if (event.keyCode === 68) {
-        movePlayerOne(playerOne, playerOnePosition, playerOneCanMoveOrAttack, 'onwards', movementDistance);
+        movePlayer(playerOne, 'right', movementDistance);
     }
     if (event.keyCode === 65) {
-        movePlayerOne(playerOne, playerOnePosition, playerOneCanMoveOrAttack, 'backwards', movementDistance);
+        movePlayer(playerOne, 'left', movementDistance);
     }
 
     if (event.keyCode === 69) {
@@ -36,11 +36,11 @@ let playerMovement = function (event) {
     }
 
     if (event.keyCode === 74) {
-        movePlayerTwo(playerTwo, playerTwoPosition, playerTwoCanMoveOrAttack, 'onwards', movementDistance);
+        movePlayer(playerTwo, 'left', movementDistance);
     }
 
     if (event.keyCode === 76) {
-        movePlayerTwo(playerTwo, playerTwoPosition, playerTwoCanMoveOrAttack, 'backwards', movementDistance);
+        movePlayer(playerTwo, 'right', movementDistance);
     }
 
     if (event.keyCode === 85) {
@@ -49,58 +49,65 @@ let playerMovement = function (event) {
             playerTwo.dataset.canMoveOrAttack = 'true';
         }
     }
-};
+
+    function movePlayer(player, direction, movementDistance) {
+        if (player === playerOne) {
+            if (direction === 'right' && playerOnePosition < playerTwoPosition - 10) {
+                playerOnePosition += movementDistance;
+            } else if (direction === 'left' && playerOnePosition > 3) {
+                playerOnePosition -= movementDistance;
+            }
+
+            player.style.left = playerOnePosition + "%";
+            player.dataset.playerPosition = playerOnePosition;
+
+            if (playerOneCanMoveOrAttack === 'false') {
+                if (direction === 'right') {
+                    player.src = "/static/images/jin_walk.gif";
+                    player.dataset.canMoveOrAttack = 'true';
+                } else if (direction === 'left') {
+                    player.src = "/static/images/jin_backwalk.gif";
+                    player.dataset.canMoveOrAttack = 'true';
+                }
+            }
+        } else {
+            if (direction === 'right' && playerTwoPosition < 87) {
+                playerTwoPosition += movementDistance;
+            } else if (direction === 'left' && playerOnePosition +10 < playerTwoPosition) {
+                playerTwoPosition -= movementDistance;
+            }
 
 
+            player.style.left = playerTwoPosition + "%";
+            player.dataset.playerPosition = playerTwoPosition;
 
-function movePlayerOne(player, playerPosition, playerCanMoveOrAttack, direction, movementDistance) {
-    if (direction === 'onwards') {
-        playerPosition += movementDistance;
-    } else if (direction === 'backwards') {
-        playerPosition -= movementDistance;
-    }
+            if (playerTwoCanMoveOrAttack === 'false') {
+                if (direction === 'left') {
+                    player.src = "/static/images/asuka_walk.gif";
+                    player.dataset.canMoveOrAttack = 'true';
+                } else if (direction === 'right') {
+                    player.src = "/static/images/asuka_backwalk.gif";
+                    player.dataset.canMoveOrAttack = 'true';
+                }
 
-    player.style.left = playerPosition + "%";
-    player.dataset.playerPosition = playerPosition;
-
-    if (playerCanMoveOrAttack === 'false') {
-        if (direction === 'onwards') {
-            player.src = "/static/images/jin_walk.gif";
-            player.dataset.canMoveOrAttack = 'true';
-        } else if (direction === 'backwards') {
-            player.src = "/static/images/jin_backwalk.gif";
-            player.dataset.canMoveOrAttack = 'true';
+            }
         }
+        ;
     }
+
 }
 
 
-function movePlayerTwo(player, playerPosition, playerCanMoveOrAttack, direction, movementDistance) {
-    if (direction === 'onwards') {
-        playerPosition -= movementDistance;
-    } else if (direction === 'backwards') {
-        playerPosition += movementDistance;
-    }
-
-    player.style.left = playerPosition + "%";
-    player.dataset.playerPosition = playerPosition;
-
-    if (playerCanMoveOrAttack === 'false') {
-        if (direction === 'onwards') {
-            player.src = "/static/images/asuka_walk.gif";
-            player.dataset.canMoveOrAttack = 'true';
-        } else if (direction === 'backwards') {
-            player.src = "/static/images/asuka_backwalk.gif";
-            player.dataset.canMoveOrAttack = 'true';
-        }
-    }
-}
 
 
 let playerOneBackToStance = function () {
     let playerOne = document.getElementById('player-one');
-    playerOne.src = "/static/images/jin_stance.gif";
-    playerOne.dataset.canMoveOrAttack = 'false';
+    setTimeout(function () {
+        playerOne.src = "/static/images/jin_stance.gif";
+        playerOne.dataset.canMoveOrAttack = 'false';
+
+    }, 500);
+
 
 };
 
