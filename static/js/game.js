@@ -32,7 +32,10 @@ let playerMovement = function (event) {
         if (playerOneCanMoveOrAttack === 'false') {
             playerOne.src = "/static/images/jin_punch.gif";
             playerOne.dataset.canMoveOrAttack = 'true';
-            if (playerTwoPosition-playerOnePosition<5) playerTwo.dataset.hp -= 10;
+            if (playerTwoPosition - playerOnePosition < 17){
+                playerTwo.dataset.hp -= 10;
+                updateHPBar('player-two');
+        }
         }
     }
 
@@ -48,8 +51,11 @@ let playerMovement = function (event) {
         if (playerTwoCanMoveOrAttack === 'false') {
             playerTwo.src = "/static/images/asuka_punch_new.gif";
             playerTwo.dataset.canMoveOrAttack = 'true';
+            if (playerTwoPosition - playerOnePosition < 12){
+                playerOne.dataset.hp -= 10;
+                updateHPBar('player-one');
         }
-    }
+    }}
 
     function movePlayer(player, direction, movementDistance) {
         if (player === playerOne) {
@@ -138,3 +144,5 @@ let updateHPBar = function(playerID) {
 
 
 init();
+
+
