@@ -89,7 +89,6 @@ let init = function () {
             playerOnePosition += movementDistance;
             playerOne.dataset.playerPosition = playerOnePosition;
             playerOne.style.left = playerOnePosition + "%";
-            console.log("ads")
         }
 
         if (aKey in keysDown && playerOneStayInWindow) { // P1 pressed walk to the left (key: a), key code: 65
