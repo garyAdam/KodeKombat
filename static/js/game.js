@@ -19,21 +19,21 @@ let playerBackToStance = function (player, stanceAnimation) {
 
 let showEntirePunch = function(playerID) {
     let gifSource = playerID === 'player-one' ? '/static/images/jin_punch.gif' : '/static/images/asuka_punch_new.gif';
-    let attackDelay = playerID === 'player-one' ? 700 : 800;
+    let attackDelay = playerID === 'player-one' ? 800 : 900;
 
     let player = document.getElementById(playerID);
     let playerClone = document.createElement('img');
     playerClone.src = gifSource;
     playerClone.classList.add(playerID);
     playerClone.style.left = player.dataset.playerPosition + 'vw';
-    playerClone.style.transform = playerID === 'player-one' ? 'translate(-22%,0)' : '';
+    playerClone.style.transform = playerID === 'player-one' ? 'translate(-22%,0)' : 'translate(-32%,0)';
 
     document.body.appendChild(playerClone);
     player.setAttribute('hidden', '');
-    setTimeout(() => {player.removeAttribute('hidden');
-                      playerClone.remove();
+    setTimeout(() => {playerClone.remove();
+                      player.removeAttribute('hidden');
                      }, attackDelay);
-    setTimeout(() => {player.dataset.canMoveOrAttack = 'true'}, attackDelay)
+    setTimeout(() => {player.dataset.canAttack = 'false'}, 1000)
 };
 
 
@@ -42,11 +42,11 @@ let init = function () {
 
     let playerOne = document.getElementById('player-one');
     let playerOnePosition = parseFloat(playerOne.dataset.playerPosition);
-    let playerOneCanMoveOrAttack = playerOne.dataset.canMoveOrAttack;
+    let playerOneCanMoveOrAttack = playerOne.dataset.canMoveOrAttack; //need refactoring
 
     let playerTwo = document.getElementById('player-two');
     let playerTwoPosition = parseFloat(playerTwo.dataset.playerPosition);
-    let playerTwoCanMoveOrAttack = playerTwo.dataset.canMoveOrAttack;
+    let playerTwoCanMoveOrAttack = playerTwo.dataset.canMoveOrAttack; //need refactoring
 
     let playerOneStartPosition = 3;
     let playerTwoStartPosition = 82;
@@ -75,6 +75,8 @@ let init = function () {
 
 
     addEventListener("keydown", function (event) {
+        let playerOneCanAttack = playerOne.dataset.canAttack;
+        let playerTwoCanAttack = playerTwo.dataset.canAttack;
 
         let playersNotCrossing = playerOnePosition + 10 < playerTwoPosition;
         let playerOneStayInWindow = playerOnePosition > playerOneStartPosition;
@@ -93,8 +95,13 @@ let init = function () {
         }
 
         if (pressedKey === eKey && !keysDown[eKey]) {
-            if (playerOneCanMoveOrAttack === 'false') {
+            if (playerOneCanAttack === 'false') {
+                playerOne.dataset.canAttack = 'true';
                 showEntirePunch('player-one');
+                if (playerTwoInPunchRange) {
+                    playerTwo.dataset.hp -= 10;
+                    updateHPBar('player-two');
+                }
             }
         }
 
@@ -108,8 +115,13 @@ let init = function () {
         }
 
         if (pressedKey === uKey && !keysDown[uKey]) {
-            if (playerOneCanMoveOrAttack === 'false') {
+            if (playerTwoCanAttack === 'false') {
+                playerTwo.dataset.canAttack = 'true';
                 showEntirePunch('player-two');
+                if (playerOneInPunchRange) {
+                    playerOne.dataset.hp -= 10;
+                    updateHPBar('player-one');
+                }
             }
         }
 
@@ -127,14 +139,6 @@ let init = function () {
             playerOne.style.left = playerOnePosition + "%";
         }
 
-        if (eKey in keysDown) { // P1 pressed punch (key: e), key code: 69
-            playerOne.dataset.canMoveOrAttack = 'true';
-            if (playerTwoInPunchRange) {
-                playerTwo.dataset.hp -= 10;
-                updateHPBar('player-two');
-            }
-        }
-
         if (jKey in keysDown && playersNotCrossing) { // P2 pressed walk to the left (key: j), key code: 74
             playerTwoPosition += -(movementDistance);
             playerTwo.dataset.playerPosition = playerTwoPosition;
@@ -147,13 +151,6 @@ let init = function () {
             playerTwo.style.left = playerTwoPosition + "%";
         }
 
-        if (uKey in keysDown) { // P2 pressed punch (key: u), key code: 85
-            playerTwo.dataset.canMoveOrAttack = 'true';
-            if (playerOneInPunchRange) {
-                playerOne.dataset.hp -= 10;
-                updateHPBar('player-one');
-            }
-        }
     }, false);
 
 
