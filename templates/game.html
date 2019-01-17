@@ -2,8 +2,25 @@
 
 {% block content %}
 
+    <img src="/static/images/jin_stance.gif" id="player-one"
+         data-player-position="{{ p1_position}}"
+         data-hp="{{ p1_start_hp }}"
+         data-can-move-or-attack="{{ p1_can_move }}"
+         data-can-attack="{{ p1_can_move }}">
 
+    <img src="/static/images/asuka_stance.gif" id="player-two"
+         data-player-position="{{ p2_position}}"
+         data-hp="{{ p2_start_hp }}"
+         data-can-move-or-attack="{{ p2_can_move }}"
+         data-can-attack="{{ p2_can_attack }}">
 
-
+    <div id="player-one-HP" class="HP-bar-container">
+        <div class="delayed-HP-bar"></div>
+        <div class="HP-bar"></div>
+    </div>
+    <div id="player-two-HP" class="HP-bar-container">
+        <div class="delayed-HP-bar"></div>
+        <div class="HP-bar"></div>
+    </div>
 
 {% endblock %}
