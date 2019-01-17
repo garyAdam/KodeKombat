@@ -56,3 +56,19 @@ body {
     border-radius: 3vh;
     box-shadow: inset 0 0 16px 1px black;
 }
+
+.HP-bar-container {
+    border-radius: 3vh;
+    border-width: 3px;
+    border-color: cyan;
+    border-style: double;
+}
+
+.delayed-HP-bar {
+    width: 30vw;
+    height: 6vh;
+    position: absolute;
+    background-color: crimson;
+    border-radius: 3vh;
+    box-shadow: inset 0 0 16px 1px black;
+}

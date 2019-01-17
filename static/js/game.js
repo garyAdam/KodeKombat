@@ -2,8 +2,11 @@ let updateHPBar = function (playerID) {
     let player = document.getElementById(playerID);
     let playerActualHP = player.dataset.hp;
 
-    let playerHPbar = document.getElementById(`${playerID}-HP`).firstElementChild;
+    let playerHPbar = document.getElementById(`${playerID}-HP`).childNodes[3];
     playerHPbar.style.width = (parseInt(playerActualHP) * 0.3) + 'vw';
+
+    let playerDelayedHPbar = document.getElementById(`${playerID}-HP`).childNodes[1];
+    setTimeout(() => {playerDelayedHPbar.style.width = (parseInt(playerActualHP) * 0.3) + 'vw'}, 500);
 };
 
 
