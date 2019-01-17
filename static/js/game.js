@@ -1,4 +1,4 @@
-let updateHPBar = function(playerID) {
+let updateHPBar = function (playerID) {
     let player = document.getElementById(playerID);
     let playerActualHP = player.dataset.hp;
 
@@ -17,9 +17,9 @@ let playerBackToStance = function (player, stanceAnimation) {
 };
 
 
-
 let init = function () {
     let movementDistance = 0.7;
+    let knockbackDistance = 9;
 
     let playerOne = document.getElementById('player-one');
     let playerOnePosition = parseFloat(playerOne.dataset.playerPosition);
@@ -101,6 +101,11 @@ let init = function () {
             playerOne.dataset.canMoveOrAttack = 'true';
             if (playerTwoInPunchRange) {
                 playerTwo.dataset.hp -= 10;
+                if (playerTwoStayInWindow) {
+                    playerTwoPosition += knockbackDistance;
+                    playerTwo.dataset.playerPosition = playerTwoPosition;
+                    playerTwo.style.left = playerTwoPosition + "%";
+                }
                 updateHPBar('player-two');
             }
         }
@@ -120,7 +125,13 @@ let init = function () {
         if (uKey in keysDown) { // P2 pressed punch (key: u), key code: 85
             playerTwo.dataset.canMoveOrAttack = 'true';
             if (playerOneInPunchRange) {
+
                 playerOne.dataset.hp -= 10;
+                if (playerOneStayInWindow) {
+                    playerOnePosition += -(knockbackDistance);
+                    playerOne.dataset.playerPosition = playerOnePosition;
+                    playerOne.style.left = playerOnePosition + "%";
+                }
                 updateHPBar('player-one');
             }
         }
