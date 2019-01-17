@@ -16,10 +16,24 @@ let playerBackToStance = function (player, stanceAnimation) {
     let playerElement = document.getElementById(player);
     playerElement.src = stanceAnimation;
     playerElement.dataset.canMoveOrAttack = 'false';
+
 };
 
 
 let init = function () {
+    function endGame(losingPlayer, winningPlayer, playerLoseAnimationWithoutExt, playerStanceAnimation) {
+
+        removeEventListener("keydown", onKeyDown, false);
+        removeEventListener("keyup", onKeyUp, false);
+        losingPlayer.src = playerLoseAnimationWithoutExt + ".gif";
+        winningPlayer.src = playerStanceAnimation;
+        setTimeout(function () {
+            losingPlayer.src = playerLoseAnimationWithoutExt + ".png";
+        },2000)
+
+    }
+
+
     let movementDistance = 0.7;
     let knockbackDistance = 9;
 
@@ -57,8 +71,9 @@ let init = function () {
 
     const p1StanceAnimation = "/static/images/jin_stance.gif";
     const p2StanceAnimation = "/static/images/asuka_stance.gif";
-    const p1LoseAnimation = "/static/images/jin_lose.gif";
-    const p2LoseAnimation = "/static/images/asuka_lose.gif";
+    const p1LoseAnimationWithoutExt = "/static/images/jin_lose";
+    const p2LoseAnimationWithoutExt = "/static/images/asuka_lose";
+
 
     addEventListener("keydown", onKeyDown, false);
 
@@ -114,10 +129,7 @@ let init = function () {
                 }
                 updateHPBar('player-two');
                 if (playerTwo.dataset.hp <= 0) {
-                    removeEventListener("keydown", onKeyDown, false);
-                    removeEventListener("keyup", onKeyUp, false);
-                    playerTwo.src = p2LoseAnimation;
-                    playerOne.src = p1StanceAnimation;
+                    endGame(playerTwo, playerOne, p2LoseAnimationWithoutExt, p1StanceAnimation);
                 }
             }
         }
@@ -147,11 +159,8 @@ let init = function () {
                 updateHPBar('player-one');
                 if (playerOne.dataset.hp <= 0) {
 
+                    endGame(playerOne, playerTwo, p1LoseAnimationWithoutExt, p2StanceAnimation);
 
-                    removeEventListener("keydown", onKeyDown, false);
-                    removeEventListener("keyup", onKeyUp, false);
-                    playerOne.src = p1LoseAnimation;
-                    playerTwo.src = p2StanceAnimation;
                 }
             }
         }
