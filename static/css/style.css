@@ -24,9 +24,22 @@ body {
     height: 35vh;
 }
 
+.player-two {
+    bottom: 1%;
+    position: absolute;
+    transition-duration: 0.1s;
+    height: 35vh;
+}
 
 #player-one {
     left: 3%;
+    bottom: 1%;
+    position: absolute;
+    transition-duration: 0.1s;
+    height: 40vh;
+}
+
+.player-one {
     bottom: 1%;
     position: absolute;
     transition-duration: 0.1s;

@@ -19,6 +19,25 @@ let playerBackToStance = function (player, stanceAnimation) {
 
 };
 
+let showEntirePunch = function(playerID) {
+    let gifSource = playerID === 'player-one' ? '/static/images/jin_punch.gif' : '/static/images/asuka_punch_new.gif';
+    let attackDelay = playerID === 'player-one' ? 800 : 900;
+
+    let player = document.getElementById(playerID);
+    let playerClone = document.createElement('img');
+    playerClone.src = gifSource;
+    playerClone.classList.add(playerID);
+    playerClone.style.left = player.dataset.playerPosition + 'vw';
+    playerClone.style.transform = playerID === 'player-one' ? 'translate(-22%,0)' : 'translate(-32%,0)';
+
+    document.body.appendChild(playerClone);
+    player.setAttribute('hidden', '');
+    setTimeout(() => {playerClone.remove();
+                      player.removeAttribute('hidden');
+                     }, attackDelay);
+    setTimeout(() => {player.dataset.canAttack = 'false'}, 1000)
+};
+
 
 let init = function () {
     function endGame(losingPlayer, winningPlayer, playerLoseAnimationWithoutExt, playerStanceAnimation) {
@@ -30,20 +49,18 @@ let init = function () {
         setTimeout(function () {
             losingPlayer.src = playerLoseAnimationWithoutExt + ".png";
         },2000)
-
     }
-
 
     let movementDistance = 0.7;
     let knockbackDistance = 9;
 
     let playerOne = document.getElementById('player-one');
     let playerOnePosition = parseFloat(playerOne.dataset.playerPosition);
-    let playerOneCanMoveOrAttack = playerOne.dataset.canMoveOrAttack;
+    let playerOneCanMoveOrAttack = playerOne.dataset.canMoveOrAttack; //need refactoring
 
     let playerTwo = document.getElementById('player-two');
     let playerTwoPosition = parseFloat(playerTwo.dataset.playerPosition);
-    let playerTwoCanMoveOrAttack = playerTwo.dataset.canMoveOrAttack;
+    let playerTwoCanMoveOrAttack = playerTwo.dataset.canMoveOrAttack; //need refactoring
 
     let playerOneStartPosition = 3;
     let playerTwoStartPosition = 82;
@@ -61,23 +78,23 @@ let init = function () {
 
     keyAnimationsP1.set(aKey, "/static/images/jin_backwalk.gif");
     keyAnimationsP1.set(dKey, "/static/images/jin_walk.gif");
-    keyAnimationsP1.set(eKey, "/static/images/jin_punch.gif");
 
     let keyAnimationsP2 = new Map();
 
     keyAnimationsP2.set(lKey, "/static/images/asuka_backwalk.gif");
     keyAnimationsP2.set(jKey, "/static/images/asuka_walk.gif");
-    keyAnimationsP2.set(uKey, "/static/images/asuka_punch_new.gif");
 
     const p1StanceAnimation = "/static/images/jin_stance.gif";
     const p2StanceAnimation = "/static/images/asuka_stance.gif";
     const p1LoseAnimationWithoutExt = "/static/images/jin_lose";
     const p2LoseAnimationWithoutExt = "/static/images/asuka_lose";
 
-
     addEventListener("keydown", onKeyDown, false);
 
     function onKeyDown(event) {
+        let playerOneCanAttack = playerOne.dataset.canAttack;
+        let playerTwoCanAttack = playerTwo.dataset.canAttack;
+
         let playersNotCrossing = playerOnePosition + 10 < playerTwoPosition;
         let playerOneStayInWindow = playerOnePosition > playerOneStartPosition;
         let playerTwoStayInWindow = playerTwoPosition < playerTwoStartPosition;
@@ -94,11 +111,49 @@ let init = function () {
             }
         }
 
+        if (pressedKey === eKey && !keysDown[eKey]) { // P1 pressed punch (key: e), key code: 69
+            if (playerOneCanAttack === 'false') {
+                playerOne.dataset.canAttack = 'true';
+                showEntirePunch('player-one');
+                if (playerTwoInPunchRange) {
+                    playerTwo.dataset.hp -= 10;
+                    updateHPBar('player-two');
+                    if (playerTwoStayInWindow) { //NEED CHANGE
+                        playerTwoPosition += knockbackDistance;
+                        playerTwo.dataset.playerPosition = playerTwoPosition;
+                        playerTwo.style.left = playerTwoPosition + "%";
+                    }
+                    if (playerTwo.dataset.hp <= 0) {
+                        endGame(playerTwo, playerOne, p2LoseAnimationWithoutExt, p1StanceAnimation);
+                    }
+                }
+            }
+        }
+
         for (const key of keyAnimationsP2.keys()) {
             if (pressedKey === key && !keysDown[key]) {
                 if (playerTwoCanMoveOrAttack === 'false') {
                     playerTwo.src = keyAnimationsP2.get(key);
                     playerTwo.dataset.canMoveOrAttack = 'true';
+                }
+            }
+        }
+
+        if (pressedKey === uKey && !keysDown[uKey]) { // P2 pressed punch (key: u), key code: 85
+            if (playerTwoCanAttack === 'false') {
+                playerTwo.dataset.canAttack = 'true';
+                showEntirePunch('player-two');
+                if (playerOneInPunchRange) {
+                    playerOne.dataset.hp -= 10;
+                    updateHPBar('player-one');
+                    if (playerOneStayInWindow) { // NEED CHANGE
+                        playerOnePosition += -(knockbackDistance);
+                        playerOne.dataset.playerPosition = playerOnePosition;
+                        playerOne.style.left = playerOnePosition + "%";
+                    }
+                    if (playerOne.dataset.hp <= 0) {
+                        endGame(playerOne, playerTwo, p1LoseAnimationWithoutExt, p2StanceAnimation);
+                    }
                 }
             }
         }
@@ -118,22 +173,6 @@ let init = function () {
             playerOne.style.left = playerOnePosition + "%";
         }
 
-        if (eKey in keysDown) { // P1 pressed punch (key: e), key code: 69
-            playerOne.dataset.canMoveOrAttack = 'true';
-            if (playerTwoInPunchRange) {
-                playerTwo.dataset.hp -= 10;
-                if (playerTwoStayInWindow) {
-                    playerTwoPosition += knockbackDistance;
-                    playerTwo.dataset.playerPosition = playerTwoPosition;
-                    playerTwo.style.left = playerTwoPosition + "%";
-                }
-                updateHPBar('player-two');
-                if (playerTwo.dataset.hp <= 0) {
-                    endGame(playerTwo, playerOne, p2LoseAnimationWithoutExt, p1StanceAnimation);
-                }
-            }
-        }
-
         if (jKey in keysDown && playersNotCrossing) { // P2 pressed walk to the left (key: j), key code: 74
             playerTwoPosition += -(movementDistance);
             playerTwo.dataset.playerPosition = playerTwoPosition;
@@ -146,25 +185,8 @@ let init = function () {
             playerTwo.style.left = playerTwoPosition + "%";
         }
 
-        if (uKey in keysDown) { // P2 pressed punch (key: u), key code: 85
-            playerTwo.dataset.canMoveOrAttack = 'true';
-            if (playerOneInPunchRange) {
+    };
 
-                playerOne.dataset.hp -= 10;
-                if (playerOneStayInWindow) {
-                    playerOnePosition += -(knockbackDistance);
-                    playerOne.dataset.playerPosition = playerOnePosition;
-                    playerOne.style.left = playerOnePosition + "%";
-                }
-                updateHPBar('player-one');
-                if (playerOne.dataset.hp <= 0) {
-
-                    endGame(playerOne, playerTwo, p1LoseAnimationWithoutExt, p2StanceAnimation);
-
-                }
-            }
-        }
-    }
 
     addEventListener("keyup", onKeyUp, false);
 
