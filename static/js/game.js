@@ -17,6 +17,25 @@ let playerBackToStance = function (player, stanceAnimation) {
 };
 
 
+let showEntirePunch = function(playerID) {
+    let gifSource = playerID === 'player-one' ? '/static/images/jin_punch.gif' : '/static/images/asuka_punch_new.gif';
+    let attackDelay = playerID === 'player-one' ? 700 : 800;
+
+    let player = document.getElementById(playerID);
+    let playerClone = document.createElement('img');
+    playerClone.src = gifSource;
+    playerClone.classList.add(playerID);
+    playerClone.style.left = player.dataset.playerPosition + 'vw';
+    playerClone.style.transform = playerID === 'player-one' ? 'translate(-22%,0)' : '';
+
+    document.body.appendChild(playerClone);
+    player.setAttribute('hidden', '');
+    setTimeout(() => {player.removeAttribute('hidden');
+                      playerClone.remove();
+                     }, attackDelay);
+    setTimeout(() => {player.dataset.canMoveOrAttack = 'true'}, attackDelay)
+};
+
 
 let init = function () {
     let movementDistance = 0.7;
@@ -45,19 +64,18 @@ let init = function () {
 
     keyAnimationsP1.set(aKey, "/static/images/jin_backwalk.gif");
     keyAnimationsP1.set(dKey, "/static/images/jin_walk.gif");
-    keyAnimationsP1.set(eKey, "/static/images/jin_punch.gif");
 
     let keyAnimationsP2 = new Map();
 
     keyAnimationsP2.set(lKey, "/static/images/asuka_backwalk.gif");
     keyAnimationsP2.set(jKey, "/static/images/asuka_walk.gif");
-    keyAnimationsP2.set(uKey, "/static/images/asuka_punch_new.gif");
 
     const p1StanceAnimation = "/static/images/jin_stance.gif";
     const p2StanceAnimation = "/static/images/asuka_stance.gif";
 
 
     addEventListener("keydown", function (event) {
+
         let playersNotCrossing = playerOnePosition + 10 < playerTwoPosition;
         let playerOneStayInWindow = playerOnePosition > playerOneStartPosition;
         let playerTwoStayInWindow = playerTwoPosition < playerTwoStartPosition;
@@ -74,12 +92,24 @@ let init = function () {
             }
         }
 
+        if (pressedKey === eKey && !keysDown[eKey]) {
+            if (playerOneCanMoveOrAttack === 'false') {
+                showEntirePunch('player-one');
+            }
+        }
+
         for (const key of keyAnimationsP2.keys()) {
             if (pressedKey === key && !keysDown[key]) {
                 if (playerTwoCanMoveOrAttack === 'false') {
                     playerTwo.src = keyAnimationsP2.get(key);
                     playerTwo.dataset.canMoveOrAttack = 'true';
                 }
+            }
+        }
+
+        if (pressedKey === uKey && !keysDown[uKey]) {
+            if (playerOneCanMoveOrAttack === 'false') {
+                showEntirePunch('player-two');
             }
         }
 
