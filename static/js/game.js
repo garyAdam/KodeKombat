@@ -1,4 +1,4 @@
-let updateHPBar = function(playerID) {
+let updateHPBar = function (playerID) {
     let player = document.getElementById(playerID);
     let playerActualHP = player.dataset.hp;
 
@@ -6,7 +6,9 @@ let updateHPBar = function(playerID) {
     playerHPbar.style.width = (parseInt(playerActualHP) * 0.3) + 'vw';
 
     let playerDelayedHPbar = document.getElementById(`${playerID}-HP`).childNodes[1];
-    setTimeout(() => {playerDelayedHPbar.style.width = (parseInt(playerActualHP) * 0.3) + 'vw'}, 500);
+    setTimeout(() => {
+        playerDelayedHPbar.style.width = (parseInt(playerActualHP) * 0.3) + 'vw'
+    }, 500);
 };
 
 
@@ -15,7 +17,6 @@ let playerBackToStance = function (player, stanceAnimation) {
     playerElement.src = stanceAnimation;
     playerElement.dataset.canMoveOrAttack = 'false';
 };
-
 
 
 let init = function () {
@@ -55,9 +56,12 @@ let init = function () {
 
     const p1StanceAnimation = "/static/images/jin_stance.gif";
     const p2StanceAnimation = "/static/images/asuka_stance.gif";
+    const p1LoseAnimation = "/static/images/jin_lose.gif";
+    const p2LoseAnimation = "/static/images/asuka_lose.gif";
 
+    addEventListener("keydown", onKeyDown, false);
 
-    addEventListener("keydown", function (event) {
+    function onKeyDown(event) {
         let playersNotCrossing = playerOnePosition + 10 < playerTwoPosition;
         let playerOneStayInWindow = playerOnePosition > playerOneStartPosition;
         let playerTwoStayInWindow = playerTwoPosition < playerTwoStartPosition;
@@ -89,6 +93,7 @@ let init = function () {
             playerOnePosition += movementDistance;
             playerOne.dataset.playerPosition = playerOnePosition;
             playerOne.style.left = playerOnePosition + "%";
+
         }
 
         if (aKey in keysDown && playerOneStayInWindow) { // P1 pressed walk to the left (key: a), key code: 65
@@ -102,6 +107,12 @@ let init = function () {
             if (playerTwoInPunchRange) {
                 playerTwo.dataset.hp -= 10;
                 updateHPBar('player-two');
+                if (playerTwo.dataset.hp <= 0) {
+                    removeEventListener("keydown", onKeyDown, false);
+                    removeEventListener("keyup", onKeyUp, false);
+                    playerTwo.src = p2LoseAnimation;
+                    playerOne.src = p1StanceAnimation;
+                }
             }
         }
 
@@ -122,12 +133,21 @@ let init = function () {
             if (playerOneInPunchRange) {
                 playerOne.dataset.hp -= 10;
                 updateHPBar('player-one');
+                if (playerOne.dataset.hp <= 0) {
+
+
+                    removeEventListener("keydown", onKeyDown, false);
+                    removeEventListener("keyup", onKeyUp, false);
+                    playerOne.src = p1LoseAnimation;
+                    playerTwo.src = p2StanceAnimation;
+                }
             }
         }
-    }, false);
+    }
 
+    addEventListener("keyup", onKeyUp, false);
 
-    addEventListener("keyup", function (event) {
+    function onKeyUp(event) {
         let pressedKey = event.keyCode;
         if (pressedKey === dKey || pressedKey === eKey || pressedKey === aKey) {
             playerBackToStance('player-one', p1StanceAnimation)
@@ -137,7 +157,7 @@ let init = function () {
             playerBackToStance('player-two', p2StanceAnimation)
         }
         delete keysDown[pressedKey];
-    }, false);
+    }
 };
 
 
